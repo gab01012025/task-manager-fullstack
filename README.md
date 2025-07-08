@@ -20,3 +20,4 @@ This is a full stack task management app built with:
 1. Clone the repo:
    ```bash
    git clone https://github.com/gab01012025/taskmanager.git
+
