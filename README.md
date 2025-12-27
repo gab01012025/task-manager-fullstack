@@ -1,71 +1,134 @@
 # 🧠 Task Manager - Fullstack App
 
-This is a fullstack task management application with authentication system, developed using **Node.js**, **Express**, **MongoDB**, and a vanilla **HTML/CSS/JS** frontend.
+API REST completa para gerenciamento de tarefas com autenticação JWT, desenvolvida com Node.js, Express e MongoDB.
 
-🔗 **Live Demo:** [https://gab01012025.github.io/task-manager-fullstack/](https://gab01012025.github.io/task-manager-fullstack/)  
-📁 **Backend Repo (included in this folder):** task-manager-backend
+🔗 **Live Demo:** [https://gab01012025.github.io/task-manager-fullstack/](https://gab01012025.github.io/task-manager-fullstack/)
 
----
+## ✨ Funcionalidades
 
-## ✨ Features
+- ✅ Registro e login de usuários (JWT)
+- ✅ Senha criptografada com bcrypt
+- ✅ CRUD completo de tarefas
+- ✅ Rotas protegidas com middleware de autenticação
+- ✅ Validação de dados com Joi
+- ✅ Error handling global
+- ✅ Testes automatizados com Jest
+- ✅ Docker ready
 
-- ✅ User registration and login (with JWT token)
-- ✅ Password encrypted with bcrypt
-- ✅ Task creation, viewing and deletion
-- ✅ Protected routes with authentication middleware
-- ✅ Frontend interface with login, register and dashboard pages
+## 🛠️ Tecnologias
 
----
+**Backend:**
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT + Bcrypt
+- Joi (validação)
+- Jest + Supertest (testes)
+- Docker
 
-## 🛠️ Technologies Used
+**Frontend:**
+- HTML5, CSS3, JavaScript
 
-**Frontend**:
-- HTML5
-- CSS3
-- JavaScript (Vanilla)
+## 📁 Estrutura do Projeto
 
-**Backend**:
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- BcryptJS
-- JSON Web Token (JWT)
-- CORS + Dotenv
+```
+├── task-manager-backend/
+│   ├── __tests__/           # Testes automatizados
+│   ├── config/              # Configuração do banco
+│   ├── controllers/         # Lógica de negócio
+│   ├── middleware/          # Auth, validação, error handling
+│   ├── models/              # Schemas do MongoDB
+│   ├── routes/              # Rotas da API
+│   ├── server.js            # Entry point
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── jest.config.js
+├── docs/                    # Frontend (GitHub Pages)
+└── README.md
+```
 
----
+## 🚀 Instalação
 
-## 🚀 How to Run Locally (Backend)
+### Opção 1: Docker (Recomendado)
 
-> The backend is located inside the folder task-manager-backend
-
-bash
-# Go to backend folder
+```bash
 cd task-manager-backend
+docker-compose up -d
+```
 
-# Install dependencies
+A API estará em `http://localhost:3000`
+
+### Opção 2: Local
+
+```bash
+cd task-manager-backend
 npm install
+cp .env.example .env
+# Edite o .env com suas configurações
+npm run dev
+```
 
-# Run the server
-node server.js
+## 📡 API Endpoints
 
-# ✅ Task Manager App
+### Autenticação
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/api/auth/register` | Registrar usuário |
+| POST | `/api/auth/login` | Login |
 
-A fullstack project to manage daily tasks with login, register, add, delete and edit task features.
+### Tarefas (requer autenticação)
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/tasks` | Listar tarefas |
+| POST | `/api/tasks` | Criar tarefa |
+| PUT | `/api/tasks/:id` | Atualizar tarefa |
+| DELETE | `/api/tasks/:id` | Deletar tarefa |
 
-Frontend: **HTML, CSS, JavaScript**  
-Backend: **Node.js, Express, MongoDB**
+## 🧪 Testes
 
----
+```bash
+cd task-manager-backend
+npm test
+```
 
-## 📌 Notes
+## 🐳 Docker
 
-- The frontend is hosted with GitHub Pages using the docs/ folder.
-- Backend runs locally or can be deployed to Render or Railway.
-- This project was built as part of my portfolio to practice and show my fullstack skills.
+```bash
+# Subir containers
+docker-compose up -d
 
----
+# Ver logs
+docker-compose logs -f
 
-## 👨‍💻 Developed by
+# Parar containers
+docker-compose down
+```
 
-Gabriel Barreto  
-[GitHub](https://github.com/gab01012025) | [LinkedIn](https://www.linkedin.com/in/gabriel-barreto-610a72370/) 
+## 📝 Exemplo de Uso
+
+```bash
+# Registrar
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"user","email":"user@email.com","password":"123456"}'
+
+# Login
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@email.com","password":"123456"}'
+
+# Criar tarefa (com token)
+curl -X POST http://localhost:3000/api/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: <seu_token>" \
+  -d '{"title":"Minha tarefa"}'
+```
+
+## 👨‍💻 Autor
+
+**Gabriel Barreto**
+- GitHub: [@gab01012025](https://github.com/gab01012025)
+- LinkedIn: [Gabriel Barreto](https://linkedin.com/in/gabriel-barreto-610a72370)
+
+## 📄 Licença
+
+MIT License

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: taskmanager-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: taskmanager
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - taskmanager-network
+
+  api:
+    build: .
+    container_name: taskmanager-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGO_URI: mongodb://admin:password123@mongodb:27017/taskmanager?authSource=admin
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    networks:
+      - taskmanager-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  taskmanager-network:
+    driver: bridge

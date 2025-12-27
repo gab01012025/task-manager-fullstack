@@ -1,59 +1,60 @@
-const Task = require("../models/taskModel");
+const Task = require("../models/task");
+const { ApiError } = require("../middleware/errorHandler");
 
-// Get all tasks
-exports.getAllTasks = async (req, res) => {
+exports.getAllTasks = async (req, res, next) => {
   try {
-    const tasks = await Task.find({ userId: req.user.id });
+    const tasks = await Task.find({ userId: req.userId }).sort({ createdAt: -1 });
     res.json(tasks);
   } catch (err) {
-    res.status(500).json({ message: "Erro ao buscar tarefas." });
+    next(err);
   }
 };
 
-// Create a new task
-exports.createTask = async (req, res) => {
+exports.createTask = async (req, res, next) => {
   try {
-    const { title } = req.body;
+    const { title, description } = req.body;
     const newTask = new Task({
       title,
-      userId: req.user.id,
+      description,
+      userId: req.userId,
+      completed: false
     });
     await newTask.save();
     res.status(201).json(newTask);
   } catch (err) {
-    res.status(400).json({ message: "Erro ao criar tarefa." });
+    next(err);
   }
 };
 
-// Update task
-exports.updateTask = async (req, res) => {
+exports.updateTask = async (req, res, next) => {
   try {
     const updatedTask = await Task.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.id },
+      { _id: req.params.id, userId: req.userId },
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
     if (!updatedTask) {
-      return res.status(404).json({ message: "Tarefa não encontrada." });
+      throw new ApiError(404, "Tarefa não encontrada");
     }
     res.json(updatedTask);
   } catch (err) {
-    res.status(400).json({ message: "Erro ao atualizar tarefa." });
+    next(err);
   }
 };
 
-// Delete task
-exports.deleteTask = async (req, res) => {
+exports.deleteTask = async (req, res, next) => {
   try {
     const deletedTask = await Task.findOneAndDelete({
       _id: req.params.id,
-      userId: req.user.id,
+      userId: req.userId,
     });
     if (!deletedTask) {
-      return res.status(404).json({ message: "Tarefa não encontrada." });
+      throw new ApiError(404, "Tarefa não encontrada");
     }
-    res.json({ message: "Tarefa deletada com sucesso." });
+    res.json({ message: "Tarefa deletada com sucesso" });
   } catch (err) {
-    res.status(500).json({ message: "Erro ao deletar tarefa." });
+    next(err);
   }
 };
+
+exports.getTasks = exports.getAllTasks;
